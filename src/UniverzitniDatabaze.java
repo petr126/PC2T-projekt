@@ -64,11 +64,11 @@ public class UniverzitniDatabaze {
         while (true) {
             try {
                 int input = scanner.nextInt();
-                scanner.nextLine(); // Clear the buffer
+                scanner.nextLine();
                 return input;
             } catch (InputMismatchException e) {
                 System.out.print("Neplatny vstup. Zadejte prosim cele cislo: ");
-                scanner.nextLine(); // Clear invalid input
+                scanner.nextLine();
             }
         }
     }
@@ -90,14 +90,14 @@ public class UniverzitniDatabaze {
             try {
                 System.out.print("Zadejte rok narozeni (1900-2100): ");
                 int year = scanner.nextInt();
-                scanner.nextLine(); // Clear the buffer
+                scanner.nextLine();
                 if (year >= 1900 && year <= 2100) {
                     return year;
                 }
                 System.out.println("Neplatny rok. Zadejte rok mezi 1900 a 2100.");
             } catch (InputMismatchException e) {
                 System.out.println("Neplatny vstup. Zadejte prosim cele cislo.");
-                scanner.nextLine(); // Clear invalid input
+                scanner.nextLine();
             }
         }
     }

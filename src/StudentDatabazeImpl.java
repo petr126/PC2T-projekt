@@ -29,7 +29,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
         try (Connection conn = DriverManager.getConnection(dbUrl);
              Statement stmt = conn.createStatement()) {
             
-            // Create students table if it doesn't exist
             String createTableSQL = "CREATE TABLE IF NOT EXISTS studenti (" +
                     "id INTEGER PRIMARY KEY, " +
                     "jmeno TEXT NOT NULL, " +
@@ -45,7 +44,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
         }
     }
 
-    @Override
     public void pridejStudenta(Student student) {
         if (student instanceof StudentTelekomunikaci) {
             studentiTelekomunikace.add(student);
@@ -55,7 +53,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
         dalsiId = Math.max(dalsiId, student.getId() + 1);
     }
 
-    @Override
     public void odeberStudenta(int id) {
         Student student = najdiStudenta(id);
         if (student != null) {
@@ -67,7 +64,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
         }
     }
 
-    @Override
     public Student najdiStudenta(int id) {
         for (Student student : studentiTelekomunikace) {
             if (student.getId() == id) {
@@ -82,7 +78,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
         return null;
     }
 
-    @Override
     public List<Student> getVsechnyStudenty() {
         List<Student> vsechnyStudenty = new ArrayList<>();
         vsechnyStudenty.addAll(studentiTelekomunikace);
@@ -90,17 +85,14 @@ class StudentDatabazeImpl implements StudentDatabaze {
         return vsechnyStudenty;
     }
 
-    @Override
     public List<Student> getStudentyTelekomunikace() {
         return new ArrayList<>(studentiTelekomunikace);
     }
 
-    @Override
     public List<Student> getStudentyKyberBezpecnosti() {
         return new ArrayList<>(studentiKyberBezpecnosti);
     }
 
-    @Override
     public void pridejZnamkuStudentovi(int id, int znamka) {
         Student student = najdiStudenta(id);
         if (student != null) {
@@ -110,7 +102,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
         }
     }
 
-    @Override
     public double getPrumerTelekomunikace() {
         if (studentiTelekomunikace.isEmpty()) {
             return 0.0;
@@ -121,7 +112,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
                 .orElse(0.0);
     }
 
-    @Override
     public double getPrumerKyberBezpecnosti() {
         if (studentiKyberBezpecnosti.isEmpty()) {
             return 0.0;
@@ -132,17 +122,14 @@ class StudentDatabazeImpl implements StudentDatabaze {
                 .orElse(0.0);
     }
 
-    @Override
     public int getPocetStudentuTelekomunikace() {
         return studentiTelekomunikace.size();
     }
 
-    @Override
     public int getPocetStudentuKyberBezpecnosti() {
         return studentiKyberBezpecnosti.size();
     }
 
-    @Override
     public void ulozStudentaDoSouboru(int id, String nazevSouboru) throws IOException {
         Student student = najdiStudenta(id);
         if (student == null) {
@@ -154,23 +141,18 @@ class StudentDatabazeImpl implements StudentDatabaze {
         }
     }
 
-    @Override
     public Student nactiStudentaZeSouboru(String nazevSouboru) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nazevSouboru))) {
             return (Student) ois.readObject();
         }
     }
     
-
-    @Override
     public void ulozVseDoDatabaze() {
         try (Connection spojeni = DriverManager.getConnection(dbUrl)) {
-            // Smazat existujici data
             try (Statement stmt = spojeni.createStatement()) {
                 stmt.executeUpdate("DELETE FROM studenti");
             }
 
-            // Vlozit vsechny studenty
             String sql = "INSERT INTO studenti (id, jmeno, prijmeni, rokNarozeni, obor, znamky) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = spojeni.prepareStatement(sql)) {
                 for (Student student : getVsechnyStudenty()) {
@@ -182,7 +164,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
                     String obor = (student instanceof StudentTelekomunikaci) ? "TELEKOM" : "KYBER";
                     pstmt.setString(5, obor);
                     
-                    // Serializovat znamky jako retezec oddeleny carkami
                     String znamkyStr = student.getZnamky().stream()
                             .map(String::valueOf)
                             .collect(Collectors.joining(","));
@@ -196,7 +177,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
         }
     }
 
-    @Override
     public void nactiVseZDatabaze() {
         studentiTelekomunikace.clear();
         studentiKyberBezpecnosti.clear();
@@ -222,7 +202,6 @@ class StudentDatabazeImpl implements StudentDatabaze {
                         student = new StudentKyberBezpecnosti(id, jmeno, prijmeni, rokNarozeni);
                     }
                     
-                    // Parsovat znamky
                     if (znamkyStr != null && !znamkyStr.isEmpty()) {
                         String[] znamkyArray = znamkyStr.split(",");
                         for (String znamkaStr : znamkyArray) {

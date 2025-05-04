@@ -62,12 +62,10 @@ abstract class Student implements Comparable<Student>, Serializable {
 
     public abstract void provedSpecialniDovednost();
 
-    @Override
     public int compareTo(Student other) {
         return this.prijmeni.compareToIgnoreCase(other.prijmeni);
     }
 
-    @Override
     public String toString() {
         return String.format("ID: %d, Jmeno: %s %s, Rok narozeni: %d, Prumer: %.2f", 
                 id, jmeno, prijmeni, rokNarozeni, getPrumer());

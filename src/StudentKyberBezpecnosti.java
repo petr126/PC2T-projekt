@@ -9,7 +9,6 @@ class StudentKyberBezpecnosti extends Student {
         super(id, jmeno, prijmeni, rokNarozeni);
     }
 
-    @Override
     public void provedSpecialniDovednost() {
         try {
             String celeJmeno = getJmeno() + " " + getPrijmeni();
